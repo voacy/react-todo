@@ -2,7 +2,7 @@ import { memo, useContext } from "react";
 import { TasksContext } from "../context/TasksContext";
 
 const TodoItem = (props) => {
-	const { className = "", id, title, isDone, ref } = props;
+	const { className = "", id, title, isDone } = props;
 
 	const {
 		deleteTask,

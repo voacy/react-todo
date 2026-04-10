@@ -1,40 +1,44 @@
 import { useState, useRef, useCallback, useEffect, useMemo } from "react";
-import useTasksLocalStorage from "./useTasksLocalStorage";
+import tasksAPI from "../api/tasksAPI";
 
 const useTasks = () => {
-	const { savedTasks, saveTasks } = useTasksLocalStorage();
-	const [tasks, setTasks] = useState(savedTasks ?? []);
+	const [tasks, setTasks] = useState([]);
 
 	const [newTaskTitle, setNewTaskTitle] = useState("");
 	const [searchQuery, setSearchQuery] = useState("");
 
 	const newTaskInputRef = useRef(null);
 
-	const addTask = useCallback(() => {
-		if (newTaskTitle.trim().length > 0) {
-			const newTask = {
-				id: crypto?.randomUUID() ?? Date.now().toString(),
-				title: newTaskTitle,
-				isDone: false,
-			};
-			setTasks((prevTasks) => [...prevTasks, newTask]);
-			setNewTaskTitle("");
-			setSearchQuery("");
-			newTaskInputRef.current.focus();
-		}
-	}, [newTaskTitle]);
+	const addTask = useCallback(async (title) => {
+		const newTask = {
+			title,
+			isDone: false,
+		};
 
-	const deleteAllTasks = useCallback(() => {
-		const isConfirmed = confirm("Are you sure you want to delete all tasks?");
-
-		if (isConfirmed) setTasks([]);
+		const data = await tasksAPI.add(newTask);
+		setTasks((prevTasks) => [...prevTasks, data]);
+		setNewTaskTitle("");
+		setSearchQuery("");
+		newTaskInputRef.current.focus();
 	}, []);
 
-	const deleteTask = useCallback((taskId) => {
+	const deleteAllTasks = useCallback(async () => {
+		const isConfirmed = confirm("Are you sure you want to delete all tasks?");
+
+		if (!isConfirmed) return;
+
+		tasksAPI.deleteAll(tasks);
+		setTasks([]);
+	}, [tasks]);
+
+	const deleteTask = useCallback(async (taskId) => {
+		tasksAPI.delete(taskId);
 		setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
 	}, []);
 
-	const toggleTaskComplete = useCallback((taskId, isDone) => {
+	const toggleTaskComplete = useCallback(async (taskId, isDone) => {
+		tasksAPI.toggleComplete(taskId, isDone);
+
 		setTasks((prevTasks) =>
 			prevTasks.map((task) => {
 				if (task.id === taskId) {
@@ -46,11 +50,12 @@ const useTasks = () => {
 	}, []);
 
 	useEffect(() => {
-		saveTasks(tasks);
-	}, [tasks]);
-
-	useEffect(() => {
 		newTaskInputRef.current.focus();
+		const loadTasks = async () => {
+			const data = await tasksAPI.getAll();
+			setTasks(data);
+		};
+		loadTasks();
 	}, []);
 
 	const filteredTasks = useMemo(() => {
