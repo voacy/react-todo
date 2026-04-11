@@ -5,7 +5,7 @@ const useCombinedRefs = (...refs) => {
 				return;
 			}
 
-			if (typeof ref === "fucntion") {
+			if (typeof ref === "function") {
 				ref(node);
 			} else {
 				ref.current = node;
