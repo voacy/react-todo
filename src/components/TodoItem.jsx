@@ -1,5 +1,7 @@
-import { memo, useContext } from "react";
+import { memo, useContext, useRef } from "react";
 import { TasksContext } from "../context/TasksContext";
+import RouterLink from "./RouterLink";
+import useCombinedRefs from "../hooks/useCombinedRefs";
 
 const TodoItem = (props) => {
 	const { className = "", id, title, isDone } = props;
@@ -11,11 +13,22 @@ const TodoItem = (props) => {
 		firstIncompleteTaskRef,
 	} = useContext(TasksContext);
 
+	const animationRef = useRef(null);
+	const combinedRef = useCombinedRefs(
+		id === firstIncompleteTaskId ? firstIncompleteTaskRef : null,
+		animationRef,
+	);
+
+	const handleClick = () => {
+		animationRef.current?.classList.add(styles.isDisappearing);
+		setTimeout(() => {
+			deleteTask();
+		}, 400);
+		deleteTask(id);
+	};
+
 	return (
-		<li
-			className={`todo-item ${className}`}
-			ref={id === firstIncompleteTaskId ? firstIncompleteTaskRef : null}
-		>
+		<li className={`todo-item ${className}`} ref={combinedRef}>
 			<input
 				className="todo-item__checkbox"
 				id={id}
@@ -23,14 +36,17 @@ const TodoItem = (props) => {
 				checked={isDone}
 				onChange={(e) => toggleTaskComplete(id, e.target.checked)}
 			/>
-			<label className="todo-item__label" htmlFor={id}>
+			<label className="todo-item__label visually-hidden" htmlFor={id}>
 				{title}
 			</label>
+			<RouterLink to={`/tasks/${id}`} aria-label="Task detail page">
+				{title}
+			</RouterLink>
 			<button
 				className="todo-item__delete-button"
 				aria-label="Delete"
 				title="Delete"
-				onClick={() => deleteTask(id)}
+				onClick={handleClick}
 			>
 				<svg
 					width="20"
