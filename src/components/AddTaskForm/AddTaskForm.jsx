@@ -41,7 +41,7 @@ const AddTaskForm = (props) => {
 				onInput={onInput}
 				ref={newTaskInputRef}
 			/>
-			<Button isDisabled={isNewTaskTitleEmpty} type="Submit">
+			<Button isDisabled={isNewTaskTitleEmpty} type="submit">
 				Add
 			</Button>
 		</form>
