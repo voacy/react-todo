@@ -1,8 +1,41 @@
-import { useState, useRef, useCallback, useEffect, useMemo } from "react";
+import {
+	useState,
+	useRef,
+	useCallback,
+	useEffect,
+	useMemo,
+	useReducer,
+} from "react";
 import tasksAPI from "@/shared/api/tasks";
 
+const tasksReducer = (state, action) => {
+	switch (action.type) {
+		case "SET_ALL": {
+			return Array.isArray(action.tasks) ? action.tasks : state;
+		}
+		case "ADD": {
+			return [...state, action.task];
+		}
+		case "TOGGLE_COMPLETE": {
+			const { id, isDone } = action;
+			return state.map((task) => {
+				return task.id === id ? { ...task, isDone } : task;
+			});
+		}
+		case "DELETE": {
+			return state.filter((task) => task.id !== action.id);
+		}
+		case "DELETE_ALL": {
+			return [];
+		}
+		default: {
+			return state;
+		}
+	}
+};
+
 const useTasks = () => {
-	const [tasks, setTasks] = useState([]);
+	const [tasks, dispatch] = useReducer(tasksReducer, []);
 
 	const [newTaskTitle, setNewTaskTitle] = useState("");
 	const [searchQuery, setSearchQuery] = useState("");
@@ -18,7 +51,7 @@ const useTasks = () => {
 		};
 
 		const data = await tasksAPI.add(newTask);
-		setTasks((prevTasks) => [...prevTasks, data]);
+		dispatch({ type: "ADD", task: data });
 		setNewTaskTitle("");
 		setSearchQuery("");
 		newTaskInputRef.current.focus();
@@ -34,38 +67,28 @@ const useTasks = () => {
 		if (!isConfirmed) return;
 
 		tasksAPI.deleteAll(tasks);
-		setTasks([]);
+		dispatch({ type: "DELETE_ALL" });
 	}, [tasks]);
 
 	const deleteTask = useCallback(async (taskId) => {
 		tasksAPI.delete(taskId);
 		setDisappearingTaskId(taskId);
 		setTimeout(() => {
-			setTasks((prevTasks) =>
-				prevTasks.filter((task) => task.id !== taskId),
-			);
+			dispatch({ type: "DELETE", id: taskId });
 			setDisappearingTaskId(null);
 		}, 400);
 	}, []);
 
 	const toggleTaskComplete = useCallback(async (taskId, isDone) => {
 		tasksAPI.toggleComplete(taskId, isDone);
-
-		setTasks((prevTasks) =>
-			prevTasks.map((task) => {
-				if (task.id === taskId) {
-					return { ...task, isDone };
-				}
-				return task;
-			}),
-		);
+		dispatch({ type: "TOGGLE_COMPLETE", id: taskId, isDone });
 	}, []);
 
 	useEffect(() => {
 		newTaskInputRef.current.focus();
 		const loadTasks = async () => {
 			const data = await tasksAPI.getAll();
-			setTasks(data);
+			dispatch({ type: "SET_ALL", tasks: data });
 		};
 		loadTasks();
 	}, []);
