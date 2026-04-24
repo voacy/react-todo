@@ -5,8 +5,10 @@ import { TasksContext } from "@/entities/todo";
 
 const AddTaskForm = (props) => {
 	const { styles } = props;
-	const { addTask, newTaskTitle, setNewTaskTitle, newTaskInputRef } =
-		useContext(TasksContext);
+
+	const [newTaskTitle, setNewTaskTitle] = useState("");
+
+	const { addTask, newTaskInputRef } = useContext(TasksContext);
 
 	const [error, setError] = useState("");
 
@@ -16,7 +18,9 @@ const AddTaskForm = (props) => {
 	const onSubmit = (event) => {
 		event.preventDefault();
 		if (!isNewTaskTitleEmpty) {
-			addTask(clearNewTaskTitle);
+			addTask(clearNewTaskTitle, () => {
+				setNewTaskTitle("");
+			});
 		}
 	};
 

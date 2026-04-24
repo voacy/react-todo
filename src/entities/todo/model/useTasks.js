@@ -36,15 +36,13 @@ const tasksReducer = (state, action) => {
 
 const useTasks = () => {
 	const [tasks, dispatch] = useReducer(tasksReducer, []);
-
-	const [newTaskTitle, setNewTaskTitle] = useState("");
 	const [searchQuery, setSearchQuery] = useState("");
 	const [disappearingTaskId, setDisappearingTaskId] = useState(null);
 	const [appearingTaskId, setAppearingTaskId] = useState(null);
 
 	const newTaskInputRef = useRef(null);
 
-	const addTask = useCallback(async (title) => {
+	const addTask = useCallback(async (title, callbackAfterAdding) => {
 		const newTask = {
 			title,
 			isDone: false,
@@ -52,7 +50,7 @@ const useTasks = () => {
 
 		const data = await tasksAPI.add(newTask);
 		dispatch({ type: "ADD", task: data });
-		setNewTaskTitle("");
+		callbackAfterAdding();
 		setSearchQuery("");
 		newTaskInputRef.current.focus();
 		setAppearingTaskId(data.id);
@@ -108,8 +106,6 @@ const useTasks = () => {
 		deleteAllTasks,
 		deleteTask,
 		toggleTaskComplete,
-		newTaskTitle,
-		setNewTaskTitle,
 		searchQuery,
 		setSearchQuery,
 		newTaskInputRef,
