@@ -13,9 +13,7 @@ const write = (tasks) => {
 };
 
 const delay = (ms = 150) => {
-	return new Promise((resolve) => {
-		setTimeout(resolve, ms);
-	});
+	return new Promise((resolve) => setTimeout(resolve, ms));
 };
 
 const localAPI = {
@@ -28,22 +26,33 @@ const localAPI = {
 	getById: async (id) => {
 		await delay();
 
-		return read().find(() => task.id === id) ?? null;
+		const task = read().find((task) => task.id === id);
+
+		if (!task) {
+			throw new Error("Task not found");
+		}
+
+		return task;
 	},
 
 	add: async (task) => {
 		await delay();
+
 		const newTask = {
 			...task,
 			id: crypto?.randomUUID() ?? Date.now().toString(),
 		};
+
 		write([...read(), newTask]);
+
 		return newTask;
 	},
 
 	delete: async (id) => {
 		await delay();
+
 		const tasks = read().filter((task) => task.id !== id);
+
 		write(tasks);
 	},
 

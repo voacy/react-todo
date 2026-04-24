@@ -36,7 +36,7 @@ const TaskPage = (props) => {
 	return (
 		<h1>
 			{task.title}
-			<p>{task.isDone ? "Задача выполнена!" : "Задача не выполнена!"}</p>
+			<p>{task.isDone ? "Task completed!" : "Task not completed!"}</p>
 		</h1>
 	);
 };
