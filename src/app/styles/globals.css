@@ -1,42 +1,57 @@
 body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  padding: 60px 20px;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 14px;
-  color: var(--color-dark-1);
-  background-color: #eef2ff;
-  background-image:
-    radial-gradient(ellipse 60% 50% at 20% 20%, rgba(46, 104, 248, 0.12) 0%, transparent 70%),
-    radial-gradient(ellipse 50% 40% at 80% 10%, rgba(139, 92, 246, 0.1) 0%, transparent 70%),
-    radial-gradient(ellipse 40% 50% at 70% 80%, rgba(46, 104, 248, 0.08) 0%, transparent 70%),
-    radial-gradient(ellipse 60% 40% at 10% 80%, rgba(99, 179, 237, 0.1) 0%, transparent 70%);
+	display: flex;
+	justify-content: center;
+	min-height: 100vh;
+	padding: 60px 20px;
+	font-family: "Plus Jakarta Sans", sans-serif;
+	font-size: 14px;
+	color: var(--color-dark-1);
+	background-color: #eef2ff;
+	background-image:
+		radial-gradient(
+			ellipse 60% 50% at 20% 20%,
+			rgba(46, 104, 248, 0.12) 0%,
+			transparent 70%
+		),
+		radial-gradient(
+			ellipse 50% 40% at 80% 10%,
+			rgba(139, 92, 246, 0.1) 0%,
+			transparent 70%
+		),
+		radial-gradient(
+			ellipse 40% 50% at 70% 80%,
+			rgba(46, 104, 248, 0.08) 0%,
+			transparent 70%
+		),
+		radial-gradient(
+			ellipse 60% 40% at 10% 80%,
+			rgba(99, 179, 237, 0.1) 0%,
+			transparent 70%
+		);
 }
 
 #root {
-  width: 100%;
-  max-width: 450px;
+	width: 100%;
+	max-width: 450px;
 }
 
 a {
-  color: var(--color-dark-1);
-  text-decoration: none;
+	color: var(--color-dark-1);
+	text-decoration: none;
 
-  &:hover {
-    color: var(--color-accent);
-  }
+	&:hover {
+		color: var(--color-accent);
+	}
 }
 
 input,
 label,
 button {
-  transition-duration: var(--transition-duration);
+	transition-duration: var(--transition-duration);
 }
 
 :focus-visible {
-  outline: 2px dashed var(--color-accent);
-  outline-offset: 4px;
-  transition-duration: 0s !important;
+	outline: 2px dashed var(--color-accent);
+	outline-offset: 4px;
+	transition-duration: 0s !important;
 }
