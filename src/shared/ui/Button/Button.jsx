@@ -4,6 +4,7 @@ const Button = (props) => {
 	const {
 		className = "",
 		type = "button",
+		variant = "primary",
 		children,
 		onClick,
 		isDisabled,
@@ -11,7 +12,7 @@ const Button = (props) => {
 
 	return (
 		<button
-			className={`${styles.button} ${className}`}
+			className={`${styles.button} ${styles[variant]} ${className}`}
 			type={type}
 			onClick={onClick}
 			disabled={isDisabled}

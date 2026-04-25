@@ -38,7 +38,7 @@ const AddTaskForm = (props) => {
 		<form className={styles.form} onSubmit={onSubmit}>
 			<Field
 				className={styles.field}
-				label="New task title"
+				label="What needs to be done"
 				id="new-task"
 				value={newTaskTitle}
 				error={error}

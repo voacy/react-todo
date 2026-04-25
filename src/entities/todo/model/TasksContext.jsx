@@ -20,6 +20,7 @@ export const TasksProvider = (props) => {
 		addTask,
 		disappearingTaskId,
 		appearingTaskId,
+		reorderTasks,
 	} = useTasks();
 
 	const { firstIncompleteTaskRef, firstIncompleteTaskId } =
@@ -40,6 +41,7 @@ export const TasksProvider = (props) => {
 			appearingTaskId,
 			firstIncompleteTaskRef,
 			firstIncompleteTaskId,
+			reorderTasks,
 		}),
 		[
 			tasks,
@@ -55,6 +57,7 @@ export const TasksProvider = (props) => {
 			appearingTaskId,
 			firstIncompleteTaskRef,
 			firstIncompleteTaskId,
+			reorderTasks,
 		],
 	);
 

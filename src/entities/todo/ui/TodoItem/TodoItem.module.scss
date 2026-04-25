@@ -2,12 +2,38 @@
 	display: flex;
 	align-items: center;
 	column-gap: 12px;
-	padding-left: 10px;
-	border: var(--border);
+	padding-left: 4px;
+	background-color: var(--color-white);
+	border: 1px solid #eef0f6;
+	border-left: 3px solid var(--color-accent);
 	border-radius: var(--border-radius);
+	box-shadow:
+		0 1px 3px rgba(46, 104, 248, 0.04),
+		0 4px 12px rgba(46, 104, 248, 0.06);
+	transition:
+		border-color var(--transition-duration),
+		background-color var(--transition-duration),
+		opacity var(--transition-duration);
 
 	&:hover {
+		border-color: #d8dffc;
+		border-left-color: var(--color-accent);
+	}
+
+	&[data-done="true"] {
 		background-color: var(--color-gray-1);
+		border-color: transparent;
+		border-left-color: transparent;
+		box-shadow: none;
+	}
+
+	&.isDragging {
+		opacity: 0.4;
+		box-shadow:
+			0 8px 24px rgba(46, 104, 248, 0.15),
+			0 2px 8px rgba(46, 104, 248, 0.1);
+		border-left-color: var(--color-accent);
+		z-index: 10;
 	}
 
 	&.isDisappearing {
@@ -36,30 +62,62 @@
 	}
 }
 
+.dragHandle {
+	flex-shrink: 0;
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	width: 28px;
+	height: 42px;
+	padding: 0;
+	color: var(--color-gray-2);
+	background: transparent;
+	border: none;
+	border-radius: var(--border-radius-sm);
+	cursor: grab;
+	touch-action: none;
+	transition: color var(--transition-duration);
+
+	&:active {
+		cursor: grabbing;
+	}
+
+	.todoItem:hover & {
+		color: var(--color-gray-3);
+	}
+}
+
 .checkbox {
 	flex-shrink: 0;
 	appearance: none;
 	position: relative;
-	width: 20px;
-	height: 20px;
+	width: 18px;
+	height: 18px;
 	margin: 0;
-	border: 1px solid var(--color-gray-4);
-	border-radius: 4px;
+	border: 1.5px solid var(--color-gray-3);
+	border-radius: 5px;
+	cursor: pointer;
+	transition:
+		border-color var(--transition-duration),
+		background-color var(--transition-duration);
+
+	&:hover {
+		border-color: var(--color-accent);
+		background-color: var(--color-accent-light);
+	}
 
 	&:checked {
-		background-color: var(--color-dark-2);
-		border-color: var(--color-dark-2);
+		background-color: var(--color-accent);
+		border-color: var(--color-accent);
 
 		& + .label {
-			color: var(--color-gray-4);
+			color: var(--color-gray-3);
 			text-decoration: line-through;
 		}
 	}
 
-	&:not(:checked) {
-		&::after {
-			opacity: 0;
-		}
+	&:not(:checked)::after {
+		opacity: 0;
 	}
 
 	&::after {
@@ -68,8 +126,8 @@
 		top: 50%;
 		left: 50%;
 		translate: -50% -50%;
-		width: 16px;
-		height: 16px;
+		width: 14px;
+		height: 14px;
 		background: url("@/shared/assets/icons/icon-check_white.svg")
 			center/contain no-repeat;
 	}
@@ -77,6 +135,8 @@
 
 .label {
 	width: 100%;
+	font-size: 14px;
+	color: var(--color-dark-1);
 	pointer-events: none;
 }
 
@@ -85,22 +145,27 @@
 	display: inline-flex;
 	justify-content: center;
 	align-items: center;
-	width: 44px;
-	height: 44px;
+	width: 42px;
+	height: 42px;
 	margin-left: auto;
 	padding: 0;
-	color: var(--color-gray-4);
+	color: var(--color-gray-3);
 	background-color: transparent;
 	border: none;
 	border-radius: inherit;
+	transition: all var(--transition-duration);
 
 	&:hover {
-		color: var(--color-white);
-		background-color: var(--color-dark-1);
+		color: var(--color-danger);
+		background-color: var(--color-danger-light);
+
+		svg path {
+			stroke: var(--color-danger);
+		}
 	}
 
 	&:active {
-		scale: 1.05;
+		scale: 0.95;
 	}
 
 	* {
